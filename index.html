@@ -108,11 +108,25 @@ const ADMIN_PASSWORD = "meow123";
 
 let isAdmin = false;
 
-let laws = JSON.parse(localStorage.getItem("catLaws")) || [
-    { text: "If it fits, I sits.", votes: 5 },
-    { text: "3am is sprinting hour.", votes: 3 },
-    { text: "All food within reach belongs to the cat.", votes: 4 }
-];
+let laws = JSON.parse(localStorage.getItem("catLaws"));
+
+if (!laws) {
+    laws = [
+        { text: "If it fits, I sits.", votes: 5 },
+        { text: "3am is sprinting hour.", votes: 3 },
+        { text: "All food within reach belongs to the cat.", votes: 4 }
+    ];
+
+    // Generate 1000 additional laws
+    for (let i = 1; i <= 1000; i++) {
+        laws.push({
+            text: "Official Cat Law #" + (i + 3),
+            votes: 0
+        });
+    }
+
+    localStorage.setItem("catLaws", JSON.stringify(laws));
+}
 
 function saveLaws() {
     localStorage.setItem("catLaws", JSON.stringify(laws));
@@ -122,7 +136,6 @@ function renderLaws() {
     const lawList = document.getElementById("lawList");
     lawList.innerHTML = "";
 
-    // Sort by votes descending
     laws.sort((a, b) => b.votes - a.votes);
 
     laws.forEach((law, index) => {
@@ -198,6 +211,5 @@ function toggleAdmin() {
 
 renderLaws();
 </script>
-
 </body>
 </html>
